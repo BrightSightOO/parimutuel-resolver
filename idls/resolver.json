@@ -1,0 +1,222 @@
+{
+  "version": "0.0.0",
+  "name": "resolver",
+  "instructions": [
+    {
+      "name": "CreateResolver",
+      "accounts": [
+        {
+          "name": "resolver",
+          "isMut": true,
+          "isSigner": false,
+          "docs": [
+            "Resolver"
+          ]
+        },
+        {
+          "name": "market",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Parimutuel market"
+          ]
+        },
+        {
+          "name": "request",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Oracle request"
+          ]
+        },
+        {
+          "name": "payer",
+          "isMut": true,
+          "isSigner": true,
+          "docs": [
+            "Payer"
+          ]
+        },
+        {
+          "name": "systemProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "System program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "createResolverArgs",
+          "type": {
+            "defined": "CreateResolverArgs"
+          }
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 0
+      }
+    },
+    {
+      "name": "Resolve",
+      "accounts": [
+        {
+          "name": "resolver",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Resolver"
+          ]
+        },
+        {
+          "name": "market",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Parimutuel market"
+          ]
+        },
+        {
+          "name": "request",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Oracle request"
+          ]
+        },
+        {
+          "name": "parimutuelProgram",
+          "isMut": false,
+          "isSigner": false,
+          "docs": [
+            "Parimutuel program"
+          ]
+        }
+      ],
+      "args": [
+        {
+          "name": "resolveArgs",
+          "type": {
+            "defined": "ResolveArgs"
+          }
+        }
+      ],
+      "discriminant": {
+        "type": "u8",
+        "value": 1
+      }
+    }
+  ],
+  "accounts": [
+    {
+      "name": "Resolver",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "accountType",
+            "type": {
+              "defined": "AccountType"
+            }
+          },
+          {
+            "name": "market",
+            "type": "publicKey"
+          },
+          {
+            "name": "request",
+            "type": "publicKey"
+          }
+        ]
+      }
+    }
+  ],
+  "types": [
+    {
+      "name": "Outcome",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Open"
+          },
+          {
+            "name": "Yes"
+          },
+          {
+            "name": "No"
+          },
+          {
+            "name": "Invalid"
+          }
+        ]
+      }
+    },
+    {
+      "name": "CreateResolverArgs",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "V1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "ResolveArgs",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "V1"
+          }
+        ]
+      }
+    },
+    {
+      "name": "AccountType",
+      "type": {
+        "kind": "enum",
+        "variants": [
+          {
+            "name": "Uninitialized"
+          },
+          {
+            "name": "Resolver"
+          }
+        ]
+      }
+    }
+  ],
+  "errors": [
+    {
+      "code": 0,
+      "name": "ArithmeticOverflow",
+      "msg": "Program arithmetic overflowed"
+    },
+    {
+      "code": 1,
+      "name": "InvalidRequest",
+      "msg": "Oracle request must be yes/no type"
+    },
+    {
+      "code": 2,
+      "name": "IncorrectRequest",
+      "msg": "Incorrect oracle request for resolver"
+    },
+    {
+      "code": 3,
+      "name": "NotResolved",
+      "msg": "Oracle request not yet resolved"
+    }
+  ],
+  "metadata": {
+    "origin": "shank",
+    "address": "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
+    "binaryVersion": "0.4.2",
+    "libVersion": "0.4.2"
+  }
+}
