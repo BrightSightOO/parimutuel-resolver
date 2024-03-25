@@ -70,7 +70,7 @@ nameToErrorMap.set("NotResolved", NotResolvedError);
  * Attempts to resolve a custom program error from the provided error code.
  * @category Errors
  */
-export function getResolverErrorFromCode(
+export function getParimutuelResolverErrorFromCode(
   code: number,
   program: Program,
   cause?: Error,
@@ -83,7 +83,7 @@ export function getResolverErrorFromCode(
  * Attempts to resolve a custom program error from the provided error name, i.e. 'Unauthorized'.
  * @category Errors
  */
-export function getResolverErrorFromName(
+export function getParimutuelResolverErrorFromName(
   name: string,
   program: Program,
   cause?: Error,

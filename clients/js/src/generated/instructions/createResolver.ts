@@ -14,13 +14,14 @@ import type { Serializer } from "@metaplex-foundation/umi/serializers";
 import { transactionBuilder } from "@metaplex-foundation/umi";
 import { mapSerializer, struct, u8 } from "@metaplex-foundation/umi/serializers";
 
-import { getAccountMetasAndSigners } from "../shared";
+import { findResolverPda } from "../accounts";
+import { expectPublicKey, getAccountMetasAndSigners } from "../shared";
 import { getCreateResolverArgsSerializer } from "../types";
 
 // Accounts.
 export type CreateResolverInstructionAccounts = {
   /** Resolver */
-  resolver: PublicKey | Pda;
+  resolver?: PublicKey | Pda;
   /** Parimutuel market */
   market: PublicKey | Pda;
   /** Oracle request */
@@ -62,12 +63,12 @@ export type CreateResolverInstructionArgs = CreateResolverInstructionDataArgs;
 
 // Instruction.
 export function createResolver(
-  context: Pick<Context, "payer" | "programs">,
+  context: Pick<Context, "eddsa" | "payer" | "programs">,
   input: CreateResolverInstructionAccounts & CreateResolverInstructionArgs,
 ): TransactionBuilder {
   // Program ID.
   const programId = context.programs.getPublicKey(
-    "resolver",
+    "parimutuelResolver",
     "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
   );
 
@@ -104,6 +105,11 @@ export function createResolver(
   const resolvedArgs: CreateResolverInstructionArgs = { ...input };
 
   // Default values.
+  if (!resolvedAccounts.resolver.value) {
+    resolvedAccounts.resolver.value = findResolverPda(context, {
+      market: expectPublicKey(resolvedAccounts.market.value),
+    });
+  }
   if (!resolvedAccounts.payer.value) {
     resolvedAccounts.payer.value = context.payer;
   }

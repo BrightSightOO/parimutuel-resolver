@@ -27,6 +27,7 @@ import {
 import {
   mapSerializer,
   publicKey as publicKeySerializer,
+  string,
   struct,
 } from "@metaplex-foundation/umi/serializers";
 
@@ -113,7 +114,7 @@ export async function safeFetchAllResolver(
 
 export function getResolverGpaBuilder(context: Pick<Context, "rpc" | "programs">) {
   const programId = context.programs.getPublicKey(
-    "resolver",
+    "parimutuelResolver",
     "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
   );
   return gpaBuilder(context, programId)
@@ -132,4 +133,37 @@ export function getResolverGpaBuilder(context: Pick<Context, "rpc" | "programs">
 
 export function getResolverSize(): number {
   return 65;
+}
+
+export function findResolverPda(
+  context: Pick<Context, "eddsa" | "programs">,
+  seeds: {
+    /** The address of the parimutuel market to resolve. */
+    market: PublicKey;
+  },
+): Pda {
+  const programId = context.programs.getPublicKey(
+    "parimutuelResolver",
+    "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
+  );
+  return context.eddsa.findPda(programId, [
+    string({ size: "variable" }).serialize("resolver"),
+    publicKeySerializer().serialize(seeds.market),
+  ]);
+}
+
+export async function fetchResolverFromSeeds(
+  context: Pick<Context, "eddsa" | "programs" | "rpc">,
+  seeds: Parameters<typeof findResolverPda>[1],
+  options?: RpcGetAccountOptions,
+): Promise<Resolver> {
+  return fetchResolver(context, findResolverPda(context, seeds), options);
+}
+
+export async function safeFetchResolverFromSeeds(
+  context: Pick<Context, "eddsa" | "programs" | "rpc">,
+  seeds: Parameters<typeof findResolverPda>[1],
+  options?: RpcGetAccountOptions,
+): Promise<Resolver | null> {
+  return safeFetchResolver(context, findResolverPda(context, seeds), options);
 }

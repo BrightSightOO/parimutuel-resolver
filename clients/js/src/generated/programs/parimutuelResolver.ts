@@ -8,20 +8,20 @@
 
 import type { ClusterFilter, Context, Program, PublicKey } from "@metaplex-foundation/umi";
 
-import { getResolverErrorFromCode, getResolverErrorFromName } from "../errors";
+import { getParimutuelResolverErrorFromCode, getParimutuelResolverErrorFromName } from "../errors";
 
-export const RESOLVER_PROGRAM_ID =
+export const PARIMUTUEL_RESOLVER_PROGRAM_ID =
   "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1" as PublicKey<"RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1">;
 
-export function createResolverProgram(): Program {
+export function createParimutuelResolverProgram(): Program {
   return {
-    name: "resolver",
-    publicKey: RESOLVER_PROGRAM_ID,
+    name: "parimutuelResolver",
+    publicKey: PARIMUTUEL_RESOLVER_PROGRAM_ID,
     getErrorFromCode(code: number, cause?: Error) {
-      return getResolverErrorFromCode(code, this, cause);
+      return getParimutuelResolverErrorFromCode(code, this, cause);
     },
     getErrorFromName(name: string, cause?: Error) {
-      return getResolverErrorFromName(name, this, cause);
+      return getParimutuelResolverErrorFromName(name, this, cause);
     },
     isOnCluster() {
       return true;
@@ -29,16 +29,20 @@ export function createResolverProgram(): Program {
   };
 }
 
-export function getResolverProgram<T extends Program = Program>(
+export function getParimutuelResolverProgram<T extends Program = Program>(
   context: Pick<Context, "programs">,
   clusterFilter?: ClusterFilter,
 ): T {
-  return context.programs.get<T>("resolver", clusterFilter);
+  return context.programs.get<T>("parimutuelResolver", clusterFilter);
 }
 
-export function getResolverProgramId(
+export function getParimutuelResolverProgramId(
   context: Pick<Context, "programs">,
   clusterFilter?: ClusterFilter,
 ): PublicKey {
-  return context.programs.getPublicKey("resolver", RESOLVER_PROGRAM_ID, clusterFilter);
+  return context.programs.getPublicKey(
+    "parimutuelResolver",
+    PARIMUTUEL_RESOLVER_PROGRAM_ID,
+    clusterFilter,
+  );
 }

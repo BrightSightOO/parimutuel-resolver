@@ -22,6 +22,31 @@ pub struct Resolver {
 impl Resolver {
     pub const LEN: usize = 65;
 
+    /// Prefix values used to generate a PDA for this account.
+    ///
+    /// Values are positional and appear in the following order:
+    ///
+    ///   0. `Resolver::PREFIX`
+    ///   1. market (`Pubkey`)
+    pub const PREFIX: &'static [u8] = "resolver".as_bytes();
+
+    pub fn create_pda(
+        market: Pubkey,
+        bump: u8,
+    ) -> Result<solana_program::pubkey::Pubkey, solana_program::pubkey::PubkeyError> {
+        solana_program::pubkey::Pubkey::create_program_address(
+            &["resolver".as_bytes(), market.as_ref(), &[bump]],
+            &crate::PARIMUTUEL_RESOLVER_ID,
+        )
+    }
+
+    pub fn find_pda(market: &Pubkey) -> (solana_program::pubkey::Pubkey, u8) {
+        solana_program::pubkey::Pubkey::find_program_address(
+            &["resolver".as_bytes(), market.as_ref()],
+            &crate::PARIMUTUEL_RESOLVER_ID,
+        )
+    }
+
     #[inline(always)]
     pub fn from_bytes(data: &[u8]) -> Result<Self, std::io::Error> {
         let mut data = data;

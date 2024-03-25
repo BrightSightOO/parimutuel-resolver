@@ -8,5 +8,5 @@
 use solana_program::pubkey;
 use solana_program::pubkey::Pubkey;
 
-/// `resolver` program ID.
-pub const RESOLVER_ID: Pubkey = pubkey!("RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1");
+/// `parimutuel_resolver` program ID.
+pub const PARIMUTUEL_RESOLVER_ID: Pubkey = pubkey!("RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1");

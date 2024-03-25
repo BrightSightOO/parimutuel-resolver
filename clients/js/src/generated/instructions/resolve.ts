@@ -14,19 +14,20 @@ import type { Serializer } from "@metaplex-foundation/umi/serializers";
 import { transactionBuilder } from "@metaplex-foundation/umi";
 import { mapSerializer, struct, u8 } from "@metaplex-foundation/umi/serializers";
 
-import { getAccountMetasAndSigners } from "../shared";
+import { findResolverPda } from "../accounts";
+import { expectPublicKey, getAccountMetasAndSigners } from "../shared";
 import { getResolveArgsSerializer } from "../types";
 
 // Accounts.
 export type ResolveInstructionAccounts = {
   /** Resolver */
-  resolver: PublicKey | Pda;
+  resolver?: PublicKey | Pda;
   /** Parimutuel market */
   market: PublicKey | Pda;
   /** Oracle request */
   request: PublicKey | Pda;
   /** Parimutuel program */
-  parimutuelProgram: PublicKey | Pda;
+  parimutuelProgram?: PublicKey | Pda;
 };
 
 // Data.
@@ -58,12 +59,12 @@ export type ResolveInstructionArgs = ResolveInstructionDataArgs;
 
 // Instruction.
 export function resolve(
-  context: Pick<Context, "programs">,
+  context: Pick<Context, "eddsa" | "programs">,
   input: ResolveInstructionAccounts & ResolveInstructionArgs,
 ): TransactionBuilder {
   // Program ID.
   const programId = context.programs.getPublicKey(
-    "resolver",
+    "parimutuelResolver",
     "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
   );
 
@@ -93,6 +94,20 @@ export function resolve(
 
   // Arguments.
   const resolvedArgs: ResolveInstructionArgs = { ...input };
+
+  // Default values.
+  if (!resolvedAccounts.resolver.value) {
+    resolvedAccounts.resolver.value = findResolverPda(context, {
+      market: expectPublicKey(resolvedAccounts.market.value),
+    });
+  }
+  if (!resolvedAccounts.parimutuelProgram.value) {
+    resolvedAccounts.parimutuelProgram.value = context.programs.getPublicKey(
+      "hplParimutuel",
+      "Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo",
+    );
+    resolvedAccounts.parimutuelProgram.isWritable = false;
+  }
 
   // Accounts in order.
   const orderedAccounts: Array<ResolvedAccount> = Object.values(resolvedAccounts).sort(

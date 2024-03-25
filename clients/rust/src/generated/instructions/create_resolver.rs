@@ -49,7 +49,11 @@ impl CreateResolver {
         let mut args = args.try_to_vec().unwrap();
         data.append(&mut args);
 
-        solana_program::instruction::Instruction { program_id: crate::RESOLVER_ID, accounts, data }
+        solana_program::instruction::Instruction {
+            program_id: crate::PARIMUTUEL_RESOLVER_ID,
+            accounts,
+            data,
+        }
     }
 }
 
@@ -266,7 +270,7 @@ impl<'a, 'b> CreateResolverCpi<'a, 'b> {
         data.append(&mut args);
 
         let instruction = solana_program::instruction::Instruction {
-            program_id: crate::RESOLVER_ID,
+            program_id: crate::PARIMUTUEL_RESOLVER_ID,
             accounts,
             data,
         };

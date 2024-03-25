@@ -1,4 +1,4 @@
-//@ts-check
+// @ts-check
 
 import { execFile } from "child_process";
 import path from "path";
@@ -25,24 +25,50 @@ console.log("generating client code...");
 
 const kinobi = k.createFromIdls([path.join(idlDir, "resolver.json")]);
 
-// Update accounts.
 kinobi.update(
-  k.updateAccountsVisitor({
-    // TODO: PDAs
+  k.updateProgramsVisitor({
+    resolver: {
+      name: "parimutuelResolver",
+    },
   }),
 );
 
-// Update instructions.
+kinobi.update(k.defaultVisitor());
+
+// Update accounts.
 kinobi.update(
-  k.updateInstructionsVisitor({
-    // TODO: ...
+  k.updateAccountsVisitor({
+    resolver: {
+      seeds: [
+        k.constantPdaSeedNodeFromString("resolver"),
+        k.variablePdaSeedNode(
+          "market",
+          k.publicKeyTypeNode(),
+          "The address of the parimutuel market to resolve.",
+        ),
+      ],
+    },
   }),
 );
 
 // Set default values for instruction accounts.
 kinobi.update(
   k.setInstructionAccountDefaultValuesVisitor([
-    // TODO: Default addresses for accounts
+    {
+      account: "parimutuelProgram",
+      ignoreIfOptional: true,
+      defaultValue: k.publicKeyValueNode(
+        "Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo",
+        "hplParimutuel",
+      ),
+    },
+    {
+      account: "resolver",
+      ignoreIfOptional: true,
+      defaultValue: k.pdaValueNode("resolver", [
+        k.pdaSeedValueNode("market", k.accountValueNode("market")),
+      ]),
+    },
   ]),
 );
 

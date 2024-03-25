@@ -21,12 +21,22 @@ module.exports = {
     accountsCluster: "https://api.mainnet-beta.solana.com/",
     programs: [
       {
+        label: "Optimistic Oracle",
+        programId: "DVMysqEbKDZdaJ1AVcmAqyVfvvZAMFwUkEQsNMQTvMZg",
+        deployPath: path.join("oracle", ".bin", "oracle.so"),
+      },
+      {
         label: "Parimutuel Resolver",
         programId: "RS1njPGQsykXyyPGUiAC9dvPyoqw73vtMFPJhipibj1",
         deployPath: getProgram("resolver.so"),
       },
     ],
     accounts: [
+      {
+        label: "HPL Parimutuel",
+        accountId: "Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo",
+        executable: true,
+      },
       {
         label: "System Extras",
         accountId: "SysExL2WDyJi9aRZrXorrjHJut3JwHQ7R9bTyctbNNG",

@@ -46,7 +46,11 @@ impl Resolve {
         let mut args = args.try_to_vec().unwrap();
         data.append(&mut args);
 
-        solana_program::instruction::Instruction { program_id: crate::RESOLVER_ID, accounts, data }
+        solana_program::instruction::Instruction {
+            program_id: crate::PARIMUTUEL_RESOLVER_ID,
+            accounts,
+            data,
+        }
     }
 }
 
@@ -74,7 +78,7 @@ pub struct ResolveInstructionArgs {
 ///   0. `[]` resolver
 ///   1. `[]` market
 ///   2. `[]` request
-///   3. `[]` parimutuel_program
+///   3. `[optional]` parimutuel_program (default to `Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo`)
 #[derive(Default)]
 pub struct ResolveBuilder {
     resolver: Option<solana_program::pubkey::Pubkey>,
@@ -107,6 +111,7 @@ impl ResolveBuilder {
         self.request = Some(request);
         self
     }
+    /// `[optional account, default to 'Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo']`
     /// Parimutuel program
     #[inline(always)]
     pub fn parimutuel_program(
@@ -145,7 +150,9 @@ impl ResolveBuilder {
             resolver: self.resolver.expect("resolver is not set"),
             market: self.market.expect("market is not set"),
             request: self.request.expect("request is not set"),
-            parimutuel_program: self.parimutuel_program.expect("parimutuel_program is not set"),
+            parimutuel_program: self
+                .parimutuel_program
+                .unwrap_or(solana_program::pubkey!("Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo")),
         };
         let args = ResolveInstructionArgs {
             resolve_args: self.resolve_args.clone().expect("resolve_args is not set"),
@@ -248,7 +255,7 @@ impl<'a, 'b> ResolveCpi<'a, 'b> {
         data.append(&mut args);
 
         let instruction = solana_program::instruction::Instruction {
-            program_id: crate::RESOLVER_ID,
+            program_id: crate::PARIMUTUEL_RESOLVER_ID,
             accounts,
             data,
         };

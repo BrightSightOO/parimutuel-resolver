@@ -5,6 +5,6 @@
 //! [https://github.com/metaplex-foundation/kinobi]
 //!
 
-pub(crate) mod resolver;
+pub(crate) mod parimutuel_resolver;
 
-pub use self::resolver::ResolverError;
+pub use self::parimutuel_resolver::ParimutuelResolverError;

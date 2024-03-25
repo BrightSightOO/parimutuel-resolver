@@ -9,7 +9,7 @@ use num_derive::FromPrimitive;
 use thiserror::Error;
 
 #[derive(Clone, Debug, Eq, Error, FromPrimitive, PartialEq)]
-pub enum ResolverError {
+pub enum ParimutuelResolverError {
     /// 0 (0x0) - Program arithmetic overflowed
     #[error("Program arithmetic overflowed")]
     ArithmeticOverflow,
@@ -24,7 +24,7 @@ pub enum ResolverError {
     NotResolved,
 }
 
-impl solana_program::program_error::PrintProgramError for ResolverError {
+impl solana_program::program_error::PrintProgramError for ParimutuelResolverError {
     fn print<E>(&self) {
         solana_program::msg!(&self.to_string());
     }
