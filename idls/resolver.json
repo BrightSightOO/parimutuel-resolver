@@ -72,7 +72,7 @@
         },
         {
           "name": "market",
-          "isMut": false,
+          "isMut": true,
           "isSigner": false,
           "docs": [
             "Parimutuel market"

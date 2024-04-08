@@ -35,7 +35,7 @@ impl Resolve {
     ) -> solana_program::instruction::Instruction {
         let mut accounts = Vec::with_capacity(4 + remaining_accounts.len());
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(self.resolver, false));
-        accounts.push(solana_program::instruction::AccountMeta::new_readonly(self.market, false));
+        accounts.push(solana_program::instruction::AccountMeta::new(self.market, false));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(self.request, false));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
             self.parimutuel_program,
@@ -76,7 +76,7 @@ pub struct ResolveInstructionArgs {
 /// ### Accounts:
 ///
 ///   0. `[]` resolver
-///   1. `[]` market
+///   1. `[writable]` market
 ///   2. `[]` request
 ///   3. `[optional]` parimutuel_program (default to `Cf9JrByfmw6CYSry39pfg2BSGHRgde2Cp5y6yZ3a2Yeo`)
 #[derive(Default)]
@@ -235,8 +235,7 @@ impl<'a, 'b> ResolveCpi<'a, 'b> {
             *self.resolver.key,
             false,
         ));
-        accounts
-            .push(solana_program::instruction::AccountMeta::new_readonly(*self.market.key, false));
+        accounts.push(solana_program::instruction::AccountMeta::new(*self.market.key, false));
         accounts
             .push(solana_program::instruction::AccountMeta::new_readonly(*self.request.key, false));
         accounts.push(solana_program::instruction::AccountMeta::new_readonly(
@@ -282,7 +281,7 @@ impl<'a, 'b> ResolveCpi<'a, 'b> {
 /// ### Accounts:
 ///
 ///   0. `[]` resolver
-///   1. `[]` market
+///   1. `[writable]` market
 ///   2. `[]` request
 ///   3. `[]` parimutuel_program
 pub struct ResolveCpiBuilder<'a, 'b> {
