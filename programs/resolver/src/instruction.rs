@@ -25,7 +25,7 @@ pub enum ResolverInstruction {
 
     /// Resolves the market based on the oracle request resolved value.
     #[account(0, name = "resolver", desc = "Resolver")]
-    #[account(1, name = "market", desc = "Parimutuel market")]
+    #[account(1, writable, name = "market", desc = "Parimutuel market")]
     #[account(2, name = "request", desc = "Oracle request")]
     #[account(3, name = "parimutuel_program", desc = "Parimutuel program")]
     Resolve(ResolveArgs),
